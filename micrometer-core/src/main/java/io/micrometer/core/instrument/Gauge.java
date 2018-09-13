@@ -22,6 +22,7 @@ import io.micrometer.core.lang.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
 /**
@@ -42,6 +43,19 @@ public interface Gauge extends Meter {
      * @return The current value.
      */
     double value();
+
+    @Override
+    default <T> T match(Function<Gauge, T> visitGauge,
+                        Function<Counter, T> visitCounter,
+                        Function<Timer, T> visitTimer,
+                        Function<DistributionSummary, T> visitSummary,
+                        Function<LongTaskTimer, T> visitLongTaskTimer,
+                        Function<TimeGauge, T> visitTimeGauge,
+                        Function<FunctionCounter, T> visitFunctionCounter,
+                        Function<FunctionTimer, T> visitFunctionTimer,
+                        Function<Meter, T> visitMeter) {
+        return visitGauge.apply(this);
+    }
 
     @Override
     default Iterable<Measurement> measure() {

@@ -15,10 +15,10 @@
  */
 package io.micrometer.core.instrument.noop;
 
-import io.micrometer.core.instrument.AbstractMeter;
-import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.*;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 
@@ -30,5 +30,18 @@ public class NoopMeter extends AbstractMeter {
     @Override
     public List<Measurement> measure() {
         return emptyList();
+    }
+
+    @Override
+    public <T> T match(Function<Gauge, T> visitGauge,
+                       Function<Counter, T> visitCounter,
+                       Function<Timer, T> visitTimer,
+                       Function<DistributionSummary, T> visitSummary,
+                       Function<LongTaskTimer, T> visitLongTaskTimer,
+                       Function<TimeGauge, T> visitTimeGauge,
+                       Function<FunctionCounter, T> visitFunctionCounter,
+                       Function<FunctionTimer, T> visitFunctionTimer,
+                       Function<Meter, T> visitMeter) {
+        return visitMeter.apply(this);
     }
 }

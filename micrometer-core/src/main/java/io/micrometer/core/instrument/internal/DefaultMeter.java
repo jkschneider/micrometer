@@ -15,9 +15,9 @@
  */
 package io.micrometer.core.instrument.internal;
 
-import io.micrometer.core.instrument.AbstractMeter;
-import io.micrometer.core.instrument.Measurement;
-import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.*;
+
+import java.util.function.Function;
 
 public class DefaultMeter extends AbstractMeter {
     private final Meter.Type type;
@@ -36,5 +36,18 @@ public class DefaultMeter extends AbstractMeter {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public <T> T match(Function<Gauge, T> visitGauge,
+                       Function<Counter, T> visitCounter,
+                       Function<Timer, T> visitTimer,
+                       Function<DistributionSummary, T> visitSummary,
+                       Function<LongTaskTimer, T> visitLongTaskTimer,
+                       Function<TimeGauge, T> visitTimeGauge,
+                       Function<FunctionCounter, T> visitFunctionCounter,
+                       Function<FunctionTimer, T> visitFunctionTimer,
+                       Function<Meter, T> visitMeter) {
+        return visitMeter.apply(this);
     }
 }

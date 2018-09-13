@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -161,6 +162,19 @@ public interface Timer extends Meter, HistogramSupport {
      * @return The maximum time of a single event.
      */
     double max(TimeUnit unit);
+
+    @Override
+    default <T> T match(Function<Gauge, T> visitGauge,
+                        Function<Counter, T> visitCounter,
+                        Function<Timer, T> visitTimer,
+                        Function<DistributionSummary, T> visitSummary,
+                        Function<LongTaskTimer, T> visitLongTaskTimer,
+                        Function<TimeGauge, T> visitTimeGauge,
+                        Function<FunctionCounter, T> visitFunctionCounter,
+                        Function<FunctionTimer, T> visitFunctionTimer,
+                        Function<Meter, T> visitMeter) {
+        return visitTimer.apply(this);
+    }
 
     @Override
     default Iterable<Measurement> measure() {

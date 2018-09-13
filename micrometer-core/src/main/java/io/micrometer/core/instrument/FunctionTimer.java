@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToLongFunction;
 
@@ -60,6 +61,19 @@ public interface FunctionTimer extends Meter {
      * @return The base time unit of the timer to which all published metrics will be scaled
      */
     TimeUnit baseTimeUnit();
+
+    @Override
+    default <T> T match(Function<Gauge, T> visitGauge,
+                        Function<Counter, T> visitCounter,
+                        Function<Timer, T> visitTimer,
+                        Function<DistributionSummary, T> visitSummary,
+                        Function<LongTaskTimer, T> visitLongTaskTimer,
+                        Function<TimeGauge, T> visitTimeGauge,
+                        Function<FunctionCounter, T> visitFunctionCounter,
+                        Function<FunctionTimer, T> visitFunctionTimer,
+                        Function<Meter, T> visitMeter) {
+        return visitFunctionTimer.apply(this);
+    }
 
     @Override
     default Iterable<Measurement> measure() {
