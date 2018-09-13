@@ -73,7 +73,7 @@ public class NewRelicMeterRegistry extends StepMeterRegistry {
             // New Relic's Insights API limits us to 1000 events per call
             final int batchSize = Math.min(config.batchSize(), 1000);
 
-            List<String> events = getMeters().stream().flatMap(meter -> meter.match(
+            List<String> events = getMeters().stream().flatMap(meter -> Meter.Type.match(meter,
                     this::writeGauge,
                     this::writeCounter,
                     this::writeTimer,

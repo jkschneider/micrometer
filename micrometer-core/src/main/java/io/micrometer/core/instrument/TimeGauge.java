@@ -21,7 +21,6 @@ import io.micrometer.core.lang.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
 /**
@@ -48,19 +47,6 @@ public interface TimeGauge extends Gauge {
      */
     default double value(TimeUnit unit) {
         return TimeUtils.convert(value(), baseTimeUnit(), unit);
-    }
-
-    @Override
-    default <T> T match(Function<Gauge, T> visitGauge,
-                        Function<Counter, T> visitCounter,
-                        Function<Timer, T> visitTimer,
-                        Function<DistributionSummary, T> visitSummary,
-                        Function<LongTaskTimer, T> visitLongTaskTimer,
-                        Function<TimeGauge, T> visitTimeGauge,
-                        Function<FunctionCounter, T> visitFunctionCounter,
-                        Function<FunctionTimer, T> visitFunctionTimer,
-                        Function<Meter, T> visitMeter) {
-        return visitTimeGauge.apply(this);
     }
 
     /**

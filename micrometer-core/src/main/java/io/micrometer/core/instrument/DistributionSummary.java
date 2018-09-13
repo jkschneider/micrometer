@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 /**
  * Track the sample distribution of events. An example would be the response sizes for requests
@@ -103,19 +102,6 @@ public interface DistributionSummary extends Meter, HistogramSupport {
             }
         }
         return Double.NaN;
-    }
-
-    @Override
-    default <T> T match(Function<Gauge, T> visitGauge,
-                        Function<Counter, T> visitCounter,
-                        Function<Timer, T> visitTimer,
-                        Function<DistributionSummary, T> visitSummary,
-                        Function<LongTaskTimer, T> visitLongTaskTimer,
-                        Function<TimeGauge, T> visitTimeGauge,
-                        Function<FunctionCounter, T> visitFunctionCounter,
-                        Function<FunctionTimer, T> visitFunctionTimer,
-                        Function<Meter, T> visitMeter) {
-        return visitSummary.apply(this);
     }
 
     @Override
